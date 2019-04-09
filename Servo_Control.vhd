@@ -32,8 +32,6 @@ entity SERVO is
 		MOTORB : out std_logic;
 
 		ANGLE : out std_logic_vector(DATA_WIDTH DOWNTO 0)
-
-
 	);
 end SERVO;
 
@@ -41,8 +39,7 @@ architecture logic of SERVO is
 	signal count : std_logic_vector(DATA_WIDTH DOWNTO 0) :=(others => '0');
 
 begin
-
-
+	ANGLE <= count;
 	process(clk,reset)    --sensitivity list
 	begin
 		if(reset = '0')then		--asynchronous reset to default values
@@ -54,7 +51,6 @@ begin
 				if(count = SETANGLE)then
 					MOTORA <= '0';
 					MOTORB <= '0';
-					count := '0';
 				elsif(SETANGLE > ANGLE)then	--check what direction to go 
 					MOTORA <= '1';			--go Clockwise
 					MOTORB <= '0';
@@ -70,11 +66,20 @@ begin
 	begin	
 		--there are 3 pulses for every 1 revolution of the motor shaft
 		--as the gearbox is 1006:1 there is 3018 pulses per revolution of the output shaft
+
 		if(rising_edge(OPTOA))then	--wait for rising edge of A
-			count <= count + 1;		--increment the count value
+			if(SETANGLE > ANGLE)then
+				count <= count + 1;		--increment the count value
+			else 
+				count <= count - 1;		--decrement the count value
+			end if;
 		else
 			if(rising_edge(OPTOB))then
-				count <= count + 1;
+				if(SETANGLE > ANGLE)then
+					count <= count + 1;		--increment the count value
+				else 
+					count <= count - 1;		--decrement the count value
+				end if;
 			end if;
 		end if;
 		
