@@ -6,40 +6,58 @@ USE ieee.std_logic_1164.all;
 USE ieee.std_logic_arith.all;
 USE ieee.numeric_std.all;
 
-entity FIFO is
+entity SERVO is
 	generic
 	(
         -- Constants
 		DATA_WIDTH	: integer  := 12;
-		BUFFER_SIZE	: integer  := 512
+		MAX_ANGLE	: integer  := 3018
 	);
 	port
 	(
-		-- Input ports
-		SETANGLE	: in  std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
-		write_Req	: in  std_logic;
-        read_Req	: in  std_logic;
-        Clk	: in  std_logic;
-        reset	: in  std_logic;
+		-- Inputs
+		STATE : in std_logic; --1 is on, 0 is off
+		SETANGLE : in  std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
 
-		-- Output ports
-		Data_out	: out std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
-		empty : out std_logic := '1';
-        full : out std_logic := '0';
-        space_Avaliable : out std_logic_vector(8 DOWNTO 0)
+		--optical encoder inputs
+		OPTOA : in std_logic;	
+		OPTOB : in std_logic;
+
+		clk : in std_logic;
+        reset : in  std_logic;
+
+		-- Outputs
+		--outputs connected to hbridge to control motor
+		MOTORA : out std_logic;
+		MOTORB : out std_logic;
+
+		ANGLE : out std_logic_vector(DATA_WIDTH DOWNTO 0)
+
 
 	);
-end FIFO;
+end SERVO;
 
-architecture logic of FIFO is
+architecture logic of SERVO is
 
 begin
 
-
-    process(clk,reset)    --sensitivity list
-
-
-    begin
-
+	variable count : integer := 0; 
+	process(clk,reset)    --sensitivity list
+	begin
+		if(reset = '0')then		--asynchronous reset to default values
+			ANGLE <= (others=>'0') ;
+			MOTORA <= '0';
+			MOTORB <= '0';
+		elsif(STATE = '1')then
+			if(SETANGLE <= MAX_ANGLE)then	--check if angle is valid
+				if(SETANGLE > ANGLE)then	--check what direction to go 
+					MOTORA <= '1';			--go Clockwise
+					MOTORB <= '0';
+				elsif(SETANGLE < ANGLE)then
+					MOTORA <= '0';			--go anticlockwise
+					MOTORB <= '1';
+				end if;
+			end if;
+		end if;
     end process;
 end logic;
