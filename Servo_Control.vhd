@@ -38,10 +38,11 @@ entity SERVO is
 end SERVO;
 
 architecture logic of SERVO is
+	signal count : std_logic_vector(DATA_WIDTH DOWNTO 0) :=(others => '0');
 
 begin
 
-	variable count : integer := 0; 
+
 	process(clk,reset)    --sensitivity list
 	begin
 		if(reset = '0')then		--asynchronous reset to default values
@@ -65,13 +66,15 @@ begin
 		end if;
 	end process;
 
-	counter: process(OPTOA,OPTOB)
-	begin
-		if(rising_edge(OPTOA))then
-			count := count + 1;
+	counter: process(OPTOA,OPTOB)	
+	begin	
+		--there are 3 pulses for every 1 revolution of the motor shaft
+		--as the gearbox is 1006:1 there is 3018 pulses per revolution of the output shaft
+		if(rising_edge(OPTOA))then	--wait for rising edge of A
+			count <= count + 1;		--increment the count value
 		else
 			if(rising_edge(OPTOB))then
-				count := count + 1;
+				count <= count + 1;
 			end if;
 		end if;
 		
