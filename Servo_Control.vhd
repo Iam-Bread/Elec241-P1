@@ -50,7 +50,11 @@ begin
 			MOTORB <= '0';
 		elsif(STATE = '1')then
 			if(SETANGLE <= MAX_ANGLE)then	--check if angle is valid
-				if(SETANGLE > ANGLE)then	--check what direction to go 
+				if(count = SETANGLE)then
+					MOTORA <= '0';
+					MOTORB <= '0';
+					count := '0';
+				elsif(SETANGLE > ANGLE)then	--check what direction to go 
 					MOTORA <= '1';			--go Clockwise
 					MOTORB <= '0';
 				elsif(SETANGLE < ANGLE)then
@@ -59,5 +63,17 @@ begin
 				end if;
 			end if;
 		end if;
-    end process;
+	end process;
+
+	counter: process(OPTOA,OPTOB)
+	begin
+		if(rising_edge(OPTOA))then
+			count := count + 1;
+		else
+			if(rising_edge(OPTOB))then
+				count := count + 1;
+			end if;
+		end if;
+		
+	end process counter;
 end logic;
