@@ -36,14 +36,17 @@ entity SERVO is
 end SERVO;
 
 architecture logic of SERVO is
+	signal countA : std_logic_vector(DATA_WIDTH DOWNTO 0) :=(others => '0');
+	signal countB : std_logic_vector(DATA_WIDTH DOWNTO 0) :=(others => '0');
 	signal count : std_logic_vector(DATA_WIDTH DOWNTO 0) :=(others => '0');
 
 begin
 	ANGLE <= count;
+	count<= std_logic_vector(unsigned(countA) + unsigned(countB));
 	process(STATE,clk,reset)    --sensitivity list
 	begin
 		if(reset = '0')then		--asynchronous reset to default values
-			ANGLE <= (others=>'0') ;
+			--count <= (others=>'0') ;
 			MOTORA <= '0';
 			MOTORB <= '0';
 		elsif(STATE = '1')then
@@ -62,26 +65,31 @@ begin
 		end if;
 	end process;
 
-	counter: process(OPTOA,OPTOB)	
+	counterA: process(OPTOA)	
 	begin	
 		--there are 3 pulses for every 1 revolution of the motor shaft
 		--as the gearbox is 1006:1 there is 3018 pulses per revolution of the output shaft
 
 		if(rising_edge(OPTOA))then	--wait for rising edge of A
 			if(unsigned(SETANGLE) > unsigned(count))then
-				count <= std_logic_vector(unsigned(count) + 1);		--increment the count value
+				countA <= std_logic_vector(unsigned(countA) + 1);		--increment the count value
 			else 
-				count <= std_logic_vector(unsigned(count) - 1);		--decrement the count value
-			end if;
-		else
-			if(rising_edge(OPTOB))then
-				if(unsigned(SETANGLE) > unsigned(count))then
-					count <= std_logic_vector(unsigned(count) + 1);		--increment the count value
-				else 
-					count <= std_logic_vector(unsigned(count) - 1);		--decrement the count value
-				end if;
+				countA <= std_logic_vector(unsigned(countA) - 1);		--decrement the count value
 			end if;
 		end if;
-		
-	end process counter;
+
+	end process counterA;
+
+	counterB: process(OPTOB)	
+	begin	
+		--there are 3 pulses for every 1 revolution of the motor shaft
+		--as the gearbox is 1006:1 there is 3018 pulses per revolution of the output shaft
+		if(rising_edge(OPTOB))then
+				if(unsigned(SETANGLE) > unsigned(count))then
+					countB <= std_logic_vector(unsigned(countB) + 1);		--increment the count value
+				else 
+					countB <= std_logic_vector(unsigned(countB) - 1);		--decrement the count value
+				end if;
+		end if;	
+	end process counterB;
 end logic;
