@@ -23,6 +23,7 @@ entity SERVO is
 		OPTOA : in std_logic;	
 		OPTOB : in std_logic;
 
+		clk : in std_logic;
         reset : in  std_logic;
 
 		-- Outputs
@@ -48,17 +49,19 @@ begin
 			--count <= (others=>'0') ;
 			MOTORA <= '0';
 			MOTORB <= '0';
-		elsif(STATE = '1')then
-			if(to_integer(unsigned(SETANGLE)) <= MAX_ANGLE)then	--check if angle is valid
-				if(count = SETANGLE)then
-					MOTORA <= '0';
-					MOTORB <= '0';
-				elsif(unsigned(SETANGLE) > unsigned(count))then	--check what direction to go 
-					MOTORA <= '1';			--go Clockwise
-					MOTORB <= '0';
-				elsif(unsigned(SETANGLE) < unsigned(count))then
-					MOTORA <= '0';			--go anticlockwise
-					MOTORB <= '1';
+		elsif(rising_edge(clk))then
+			if(STAtE = '1')then
+				if(to_integer(unsigned(SETANGLE)) <= MAX_ANGLE)then	--check if angle is valid
+					if(count = SETANGLE)then
+						MOTORA <= '0';
+						MOTORB <= '0';
+					elsif(unsigned(SETANGLE) > unsigned(count))then	--check what direction to go 
+						MOTORA <= '1';			--go Clockwise
+						MOTORB <= '0';
+					elsif(unsigned(SETANGLE) < unsigned(count))then
+						MOTORA <= '0';			--go anticlockwise
+						MOTORB <= '1';
+					end if;
 				end if;
 			end if;
 		end if;
