@@ -51,6 +51,10 @@ VHDL/SPIClient/transcript
 # Quartus
 **/db/
 *.qws
+*.qip
+*.qsf
+*.bsf
+*.cmp
 **/incremental_db/
 **/simulation/
 **/output_files/
@@ -58,3 +62,6 @@ VHDL/SPIClient/transcript
 
 #Exclusions
 !/**/mbed/**    
+
+1
+/mbed/*
