@@ -3,7 +3,7 @@
 -- it. 
 LIBRARY ieee;
 USE ieee.std_logic_1164.all;
-USE ieee.std_logic_arith.all;
+--USE ieee.std_logic_arith.all;
 USE ieee.numeric_std.all;
 
 entity SERVO is
@@ -40,21 +40,21 @@ architecture logic of SERVO is
 
 begin
 	ANGLE <= count;
-	process(clk,reset)    --sensitivity list
+	process(STATE,clk,reset)    --sensitivity list
 	begin
 		if(reset = '0')then		--asynchronous reset to default values
 			ANGLE <= (others=>'0') ;
 			MOTORA <= '0';
 			MOTORB <= '0';
 		elsif(STATE = '1')then
-			if(SETANGLE <= MAX_ANGLE)then	--check if angle is valid
+			if(to_integer(unsigned(SETANGLE)) <= MAX_ANGLE)then	--check if angle is valid
 				if(count = SETANGLE)then
 					MOTORA <= '0';
 					MOTORB <= '0';
-				elsif(SETANGLE > ANGLE)then	--check what direction to go 
+				elsif(unsigned(SETANGLE) > unsigned(count))then	--check what direction to go 
 					MOTORA <= '1';			--go Clockwise
 					MOTORB <= '0';
-				elsif(SETANGLE < ANGLE)then
+				elsif(unsigned(SETANGLE) < unsigned(count))then
 					MOTORA <= '0';			--go anticlockwise
 					MOTORB <= '1';
 				end if;
@@ -68,17 +68,17 @@ begin
 		--as the gearbox is 1006:1 there is 3018 pulses per revolution of the output shaft
 
 		if(rising_edge(OPTOA))then	--wait for rising edge of A
-			if(SETANGLE > ANGLE)then
-				count <= count + 1;		--increment the count value
+			if(unsigned(SETANGLE) > unsigned(count))then
+				count <= std_logic_vector(unsigned(count) + 1);		--increment the count value
 			else 
-				count <= count - 1;		--decrement the count value
+				count <= std_logic_vector(unsigned(count) - 1);		--decrement the count value
 			end if;
 		else
 			if(rising_edge(OPTOB))then
-				if(SETANGLE > ANGLE)then
-					count <= count + 1;		--increment the count value
+				if(unsigned(SETANGLE) > unsigned(count))then
+					count <= std_logic_vector(unsigned(count) + 1);		--increment the count value
 				else 
-					count <= count - 1;		--decrement the count value
+					count <= std_logic_vector(unsigned(count) - 1);		--decrement the count value
 				end if;
 			end if;
 		end if;
