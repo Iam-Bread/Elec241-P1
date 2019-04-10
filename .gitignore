@@ -61,7 +61,7 @@ VHDL/SPIClient/transcript
 **/*.rpt
 
 #Exclusions
-!/**/mbed/**    
+/**/mbed/**    
 
 1
 /mbed/*
