@@ -23,7 +23,6 @@ entity SERVO is
 		OPTOA : in std_logic;	
 		OPTOB : in std_logic;
 
-		clk : in std_logic;
         reset : in  std_logic;
 
 		-- Outputs
