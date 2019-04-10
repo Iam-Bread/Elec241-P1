@@ -63,5 +63,3 @@ VHDL/SPIClient/transcript
 #Exclusions
 /**/mbed/**    
 
-1
-/mbed/*
