@@ -18,8 +18,8 @@ entity AngleTracker is
 		OPTOA : in std_logic;	
 		OPTOB : in std_logic;
 
-        Angle_A : out std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
-        Angle_B : out std_logic_vector(DATA_WIDTH-1 DOWNTO 0)
+        Angle_A : out std_logic_vector(DATA_WIDTH-1 DOWNTO 0)
+     --   Angle_B : out std_logic_vector(DATA_WIDTH-1 DOWNTO 0)
 	);
 end AngleTracker;
 
@@ -28,11 +28,11 @@ architecture logic of AngleTracker is
     signal state: state_type := clockwise; 	--default state is clockwise
     
     signal countA : std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
-    signal countB : std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
+   -- signal countB : std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
 begin
 
     Angle_A <= countA;
-    Angle_B <= countB;
+   -- Angle_B <= countB;
 
     --determine the direction the motor is going
     direction : process(OPTOA,OPTOB)
@@ -51,21 +51,29 @@ begin
     begin
         if(rising_edge(OPTOA))then
             if(state = clockwise)then
-                countA <= std_logic_vector(unsigned(countA) + 1);   --increment A
-            elsif(state = anticlockwise)then
-                countA <= std_logic_vector(unsigned(countA) - 1);   --decrement A
+                if(to_integer(unsigned(countA) = MAX_ANGLE)then
+                    countA <= (others => '0'); 
+                else
+                    countA <= std_logic_vector(unsigned(countA) + 1);   --increment A
+                end if;
+            else
+                if(countA = '0')then
+                    count <= std_logic_vector(to_unsinged(MAX_ANGLE, DATA_WIDTH));
+                else
+                    countA <= std_logic_vector(unsigned(countA) - 1);   --decrement A
+                end if;
             end if;   
         end if;
     end process Acount;
     --counter for optical encoder B
-    Bcount : process(OPTOB)    --sensitivity list
-    begin
-        if(rising_edge(OPTOB))then
-            if(state = clockwise)then
-                countB <= std_logic_vector(unsigned(countB) + 1);
-            elsif(state = anticlockwise)then
-                countB <= std_logic_vector(unsigned(countB) - 1);
-            end if; 
-        end if;
-    end process Bcount;
+   -- Bcount : process(OPTOB)    --sensitivity list
+    --begin
+      --  if(rising_edge(OPTOB))then
+        --    if(state = clockwise)then
+          --      countB <= std_logic_vector(unsigned(countB) + 1);
+           -- elsif(state = anticlockwise)then
+            ---    countB <= std_logic_vector(unsigned(countB) - 1);
+            --end if; 
+    --    end if;
+    --end process Bcount;
 end logic;
