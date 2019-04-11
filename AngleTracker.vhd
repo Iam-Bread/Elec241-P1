@@ -5,6 +5,7 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.all;
 USE ieee.numeric_std.all;
 
+
 entity AngleTracker is
 	generic
 	(
@@ -51,14 +52,14 @@ begin
     begin
         if(rising_edge(OPTOA))then
             if(state = clockwise)then
-                if(to_integer(unsigned(countA) = MAX_ANGLE)then
+                if(to_integer(unsigned(countA)) = MAX_ANGLE)then
                     countA <= (others => '0'); 
                 else
                     countA <= std_logic_vector(unsigned(countA) + 1);   --increment A
                 end if;
             else
-                if(countA = '0')then
-                    count <= std_logic_vector(to_unsinged(MAX_ANGLE, DATA_WIDTH));
+                if(to_integer(unsigned(countA)) = 0)then
+                    countA <= std_logic_vector(to_unsigned(MAX_ANGLE, DATA_WIDTH));
                 else
                     countA <= std_logic_vector(unsigned(countA) - 1);   --decrement A
                 end if;
