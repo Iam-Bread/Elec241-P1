@@ -37,10 +37,12 @@ begin
     --determine the direction the motor is going
     direction : process(OPTOA,OPTOB)
     begin
-        if(rising_edge(OPTOA) and OPTOB ='1')then --if rising edge of A and b is allready high then B must lead A
-            state <= clockwise;
-        else
-            state <= anticlockwise; --A is leading B
+        if(rising_edge(OPTOA))then --if rising edge of A and b is allready high then B must lead A
+            if(OPTOB = '1')then
+                state <= clockwise;
+            else
+                state <= anticlockwise; --A is leading B
+            end if;
         end if;
     end process direction;
 
