@@ -19,8 +19,8 @@ entity AngleTracker is
 		OPTOA : in std_logic;	
 		OPTOB : in std_logic;
 
-        Angle_A : out std_logic_vector(DATA_WIDTH-1 DOWNTO 0)
-     --   Angle_B : out std_logic_vector(DATA_WIDTH-1 DOWNTO 0)
+        Angle_A : out std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
+       Angle_B : out std_logic_vector(DATA_WIDTH-1 DOWNTO 0)
 	);
 end AngleTracker;
 
@@ -29,16 +29,16 @@ architecture logic of AngleTracker is
     signal state: state_type := clockwise; 	--default state is clockwise
     
     signal countA : std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
-   -- signal countB : std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
+    signal countB : std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
 begin
 
     Angle_A <= countA;
-   -- Angle_B <= countB;
+    Angle_B <= countB;
 
     --determine the direction the motor is going
     direction : process(OPTOA,OPTOB)
     begin
-        if(rising_edge(OPTOA))then --if rising edge of A and b is allready high then B must lead A
+        if(rising_edge(OPTOA))then --if rising edge of A, and B is allready high then B must lead A
             if(OPTOB = '1')then
                 state <= clockwise;
             else

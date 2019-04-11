@@ -6,12 +6,12 @@ USE ieee.std_logic_1164.all;
 --USE ieee.std_logic_arith.all;
 USE ieee.numeric_std.all;
 
-entity SERVO is
+entity MotorController is
 	generic
 	(
         -- Constants
 		DATA_WIDTH	: integer  := 12;
-		MAX_ANGLE	: integer  := 3018
+		MAX_ANGLE	: integer  := 3017
 	);
 	port
 	(
@@ -32,31 +32,35 @@ entity SERVO is
 
 		ANGLE : out std_logic_vector(DATA_WIDTH DOWNTO 0)
 	);
-end SERVO;
+end MotorController;
 
-architecture logic of SERVO is
+architecture logic of MotorController is
 
 begin
 	process(STATE,clk,reset)    --sensitivity list
 	begin
 		if(reset = '0')then		--asynchronous reset to default values
 			--count <= (others=>'0') ;
-			MOTORA <= '0';
-			MOTORB <= '0';
+			MOTORA <= '1';
+			MOTORB <= '1';
 		elsif(rising_edge(clk))then
 			if(STATE = '1')then
 				if(to_integer(unsigned(SETANGLE)) < MAX_ANGLE)then	--check if angle is valid
 					if(Angle_A = SETANGLE)then
-						MOTORA <= '0';
-						MOTORB <= '0';
+						MOTORA <= '1';
+						MOTORB <= '1';
 					elsif(unsigned(SETANGLE) > unsigned(Angle_A))then	--check what direction to go 
 						MOTORA <= '1';			--go Clockwise
 						MOTORB <= '0';
 					elsif(unsigned(SETANGLE) < unsigned(Angle_A))then
 						MOTORA <= '0';			--go anticlockwise
 						MOTORB <= '1';
-					end if;
-				end if;
+                    end if;
+                else
+                    MOTORA <= '1';
+                    MOTORB <= '1';
+                end if;
+                
 			end if;
 		end if;
 	end process;
