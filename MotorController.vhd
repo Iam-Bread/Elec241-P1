@@ -22,7 +22,6 @@ entity MotorController is
         Angle_A : in std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
         Angle_B : in std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
 
-		clk : in std_logic;
         reset : in  std_logic;
 
 		-- Outputs
@@ -37,31 +36,29 @@ end MotorController;
 architecture logic of MotorController is
 
 begin
-	process(STATE,clk,reset)    --sensitivity list
+	process(STATE,reset,Angle_A)    --sensitivity list
 	begin
 		if(reset = '0')then		--asynchronous reset to default values
 			--count <= (others=>'0') ;
 			MOTORA <= '1';
 			MOTORB <= '1';
-		elsif(rising_edge(clk))then
-			if(STATE = '1')then
-				if(to_integer(unsigned(SETANGLE)) < MAX_ANGLE)then	--check if angle is valid
-					if(Angle_A = SETANGLE)then
-						MOTORA <= '1';
-						MOTORB <= '1';
-					elsif(unsigned(SETANGLE) > unsigned(Angle_A))then	--check what direction to go 
-						MOTORA <= '1';			--go Clockwise
-						MOTORB <= '0';
-					elsif(unsigned(SETANGLE) < unsigned(Angle_A))then
-						MOTORA <= '0';			--go anticlockwise
-						MOTORB <= '1';
-                    end if;
-                else
-                    MOTORA <= '1';
-                    MOTORB <= '1';
-                end if;
+		elsif(STATE = '1')then
+			if(to_integer(unsigned(SETANGLE)) < MAX_ANGLE)then	--check if angle is valid
+				if(Angle_A = SETANGLE)then
+					MOTORA <= '1';
+					MOTORB <= '1';
+				elsif(unsigned(SETANGLE) > unsigned(Angle_A))then	--check what direction to go 
+					MOTORA <= '1';			--go Clockwise
+					MOTORB <= '0';
+				elsif(unsigned(SETANGLE) < unsigned(Angle_A))then
+					MOTORA <= '0';			--go anticlockwise
+					MOTORB <= '1';
+                  end if;
+            else
+                MOTORA <= '1';
+                MOTORB <= '1';
+            end if;
                 
-			end if;
-		end if;
+        end if;
 	end process;
 end logic;
