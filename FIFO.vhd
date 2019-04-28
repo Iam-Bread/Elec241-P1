@@ -37,6 +37,8 @@ architecture logic of FIFO is
 
     signal empty_internal : std_logic := '0';
     signal full_internal: std_logic := '0';
+	 
+	
 begin
 
     empty <= empty_internal;    --map internal signals to ports
@@ -44,42 +46,43 @@ begin
 
     process(clk,reset)    --sensitivity list
 
-    variable first_Sample : integer := 0;     --points to the sample thats been in the buffer the longest (first sample)
-    variable newest_Sample : integer := 0;  --points to the newest sample (last sample)
-    variable free_Space : integer := 0;     --points to the next space in the buffer
+    variable first_Sample : natural range 0 to BUFFER_SIZE;     --points to the sample thats been in the buffer the longest (first sample)
+    variable newest_Sample : natural range 0 to BUFFER_SIZE;  --points to the newest sample (last sample)
+    variable free_Space : natural range 0 to BUFFER_SIZE;     --points to the next space in the buffer
 
     begin
-        --work out if the buffer is full or empty
-        if(newest_Sample = first_Sample and first_Sample = free_Space)then
-            empty_internal <= '1';
-        elsif(first_Sample =(newest_Sample+1) or first_Sample =(newest_Sample-1))then
-            full_internal <= '1';
-        else 
-            empty_internal <= '0';
-            full_internal <= '0';
-        end if;
-
-        --check if the pointer variables have passed the size of the buffer, 
-        --reset them if so
-        if(first_Sample = BUFFER_SIZE)then
-            first_Sample := 0;
-        end if;
-        if(newest_Sample = BUFFER_SIZE)then
-            newest_Sample := 0;
-        end if;
-        if(free_Space = BUFFER_SIZE)then
-            free_Space := 0;
-        end if; 
-            
-        
+       
         if(reset = '1')then     --reset values to defualts
             Data_out <= (others => '0');
-            empty <= '0';
-            full <= '0';
+            empty_internal <= '0';
+            full_internal <= '0';
             first_Sample := 0;
             newest_Sample := 0;
             free_Space := 0;
         elsif(rising_edge(Clk))then     --on the rising edge of the clock
+		  
+				--work out if the buffer is full or empty
+			  if(newest_Sample = first_Sample and first_Sample = free_Space)then
+					empty_internal <= '1';
+			  elsif(first_Sample =(newest_Sample+1) or first_Sample =(newest_Sample-1))then
+					full_internal <= '1';
+			  else 
+					empty_internal <= '0';
+					full_internal <= '0';
+			  end if;
+	
+			  --check if the pointer variables have passed the size of the buffer, 
+			  --reset them if so
+			  if(first_Sample = BUFFER_SIZE)then
+					first_Sample := 0;
+			  end if;
+			  if(newest_Sample = BUFFER_SIZE)then
+					newest_Sample := 0;
+			  end if;
+			  if(free_Space = BUFFER_SIZE)then
+					free_Space := 0;
+			  end if; 
+		  --logic to fill/empty buffer
             if(write_Req = '1' and full_internal = '0')then --check for a write request
                 FIFO_buffer(free_Space) <= Data_in;     --set buffer at the next free space to input
                 free_Space := free_Space +1;        --increment the pointers
@@ -88,7 +91,7 @@ begin
                 Data_out <= FIFO_buffer(first_Sample);    --set the data out to equal the first sample
                 first_Sample := first_Sample +1;            --increment the pointers
             end if;
-            space_Avaliable <= std_logic_vector(to_unsigned((BUFFER_SIZE-(abs(first_Sample-newest_Sample)+1)))); --calculate to space avaliable in the buffer
+            space_Avaliable <= std_logic_vector(to_unsigned((BUFFER_SIZE-(abs(first_Sample-newest_Sample)+1)),9)); --calculate to space avaliable in the buffer
         end if;
 
     end process;
