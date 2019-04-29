@@ -36,38 +36,54 @@ architecture logic of FIFO is
 
     signal empty_internal : std_logic := '0';
     signal full_internal: std_logic := '0';
-	 
+    type buffer_type is array (0 to BUFFER_SIZE-1) of std_logic_vector(DATA_WIDTH-1 downto 0);  --create the buffer which is an array of 512 samples at 12 bits wide
+    signal FIFO_buffer : buffer_type;   --buffer for queue
 	
 begin
 
     empty <= empty_internal;    --map internal signals to ports
     full <= full_internal;
-
     process(clk,reset)    --sensitivity list
 
-	 
-	 type buffer_type is array (0 to BUFFER_SIZE-1) of std_logic_vector(DATA_WIDTH-1 downto 0);  --create the buffer which is an array of 512 samples at 12 bits wide
-    variable FIFO_buffer : buffer_type;   --buffer for queue
-	 
     variable first_Sample : natural range 0 to BUFFER_SIZE;     --points to the sample thats been in the buffer the longest (first sample)
     variable newest_Sample : natural range 0 to BUFFER_SIZE;  --points to the newest sample (last sample)
     variable free_Space : natural range 0 to BUFFER_SIZE;     --points to the next space in the buffer
+    variable numberOfValues: natural range 0 to BUFFER_SIZE-1;
 
     begin
        
         if(reset = '0')then     --reset values to defualts
+            Data_out <= (others => 0);
             empty_internal <= '0';
             full_internal <= '0';
             first_Sample := 0;
-            newest_Sample := 0;
             free_Space := 0;
         elsif(rising_edge(Clk))then     --on the rising edge of the clock
-		  
+            --logic to write to the buffer
+            if(write_Req = '1' and full_internal = '0')then --check for a write request
+                FIFO_buffer(free_Space) := Data_in;     --set buffer at the next free space to input
+                free_Space := free_Space +1;        --increment the pointers
+                numberOfValues := numberOfValues +1;
+            end if;
+
+            --logic to read from the buffer
+            if(read_Req = '1' and empty_internal = '0')then  --check for a read request
+                Data_out <= FIFO_buffer(first_Sample);    --set the data out to equal the first sample
+                first_Sample := first_Sample +1;            --increment the pointers
+                numberOfValues := numberOfValues -1;
+            end if;
+
+             --calculate to space avaliable left in the buffer
+            space_Avaliable <= std_logic_vector(to_unsigned((BUFFER_SIZE-(abs(numberOfValues))),9));
+
+
 				--work out if the buffer is full or empty
-			  if(newest_Sample = first_Sample and first_Sample = free_Space)then
-					empty_internal <= '1';
-			  elsif(first_Sample =(newest_Sample+1) or first_Sample =(newest_Sample-1))then
-					full_internal <= '1';
+			  if(numberOfValues = 0)then
+                    empty_internal <= '1';
+                    full_internal <= '0';
+			  elsif(numberOfValues = BUFFER_SIZE)then
+                    full_internal <= '1';
+                    empty_internal <= '0';
 			  else 
 					empty_internal <= '0';
 					full_internal <= '0';
@@ -75,27 +91,13 @@ begin
 	
 			  --check if the pointer variables have passed the size of the buffer, 
 			  --reset them if so
-			  if(first_Sample = BUFFER_SIZE)then
+			  if(first_Sample = BUFFER_SIZE-1)then
 					first_Sample := 0;
 			  end if;
-			  if(newest_Sample = BUFFER_SIZE)then
-					newest_Sample := 0;
-			  end if;
-			  if(free_Space = BUFFER_SIZE)then
+			  if(free_Space = BUFFER_SIZE-1)then
 					free_Space := 0;
 			  end if; 
-		  --logic to write to the buffer
-            if(write_Req = '1' and full_internal = '0')then --check for a write request
-                FIFO_buffer(free_Space) := Data_in;     --set buffer at the next free space to input
-                free_Space := free_Space +1;        --increment the pointers
-                newest_Sample := newest_Sample +1;
-				end if;
-			--logic to read from the buffer
-            if(read_Req = '1' and empty_internal = '0')then  --check for a read request
-                Data_out <= FIFO_buffer(first_Sample);    --set the data out to equal the first sample
-                first_Sample := first_Sample +1;            --increment the pointers
-            end if;
-            space_Avaliable <= std_logic_vector(to_unsigned((BUFFER_SIZE-(abs(first_Sample-newest_Sample)+1)),9)); --calculate to space avaliable in the buffer
+
         end if;
 
     end process;
