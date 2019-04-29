@@ -18,22 +18,21 @@ entity FIFO is
 		-- Input ports
 		Data_in	: in  std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
 		write_Req	: in  std_logic;
-        read_Req	: in  std_logic;
-        Clk	: in  std_logic;
-        reset	: in  std_logic;
+      read_Req	: in  std_logic;
+      Clk	: in  std_logic;
+      reset	: in  std_logic;
 
 		-- Output ports
 		Data_out	: out std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
 		empty : out std_logic := '1';
-        full : out std_logic := '0';
-        space_Avaliable : out std_logic_vector(8 DOWNTO 0)
+      full : out std_logic := '0';
+      space_Avaliable : out std_logic_vector(8 DOWNTO 0)
 
 	);
 end FIFO;
 
 architecture logic of FIFO is
-    type buffer_type is array (0 to BUFFER_SIZE-1) of std_logic_vector(DATA_WIDTH-1 downto 0);  --create the buffer which is an array of 512 samples at 12 bits wide
-    signal FIFO_buffer : buffer_type :=(others => (others => '0'));   --buffer for queue
+    
 
     signal empty_internal : std_logic := '0';
     signal full_internal: std_logic := '0';
@@ -46,14 +45,17 @@ begin
 
     process(clk,reset)    --sensitivity list
 
+	 
+	 type buffer_type is array (0 to BUFFER_SIZE-1) of std_logic_vector(DATA_WIDTH-1 downto 0);  --create the buffer which is an array of 512 samples at 12 bits wide
+    variable FIFO_buffer : buffer_type;   --buffer for queue
+	 
     variable first_Sample : natural range 0 to BUFFER_SIZE;     --points to the sample thats been in the buffer the longest (first sample)
     variable newest_Sample : natural range 0 to BUFFER_SIZE;  --points to the newest sample (last sample)
     variable free_Space : natural range 0 to BUFFER_SIZE;     --points to the next space in the buffer
 
     begin
        
-        if(reset = '1')then     --reset values to defualts
-            Data_out <= (others => '0');
+        if(reset = '0')then     --reset values to defualts
             empty_internal <= '0';
             full_internal <= '0';
             first_Sample := 0;
@@ -82,12 +84,14 @@ begin
 			  if(free_Space = BUFFER_SIZE)then
 					free_Space := 0;
 			  end if; 
-		  --logic to fill/empty buffer
+		  --logic to write to the buffer
             if(write_Req = '1' and full_internal = '0')then --check for a write request
-                FIFO_buffer(free_Space) <= Data_in;     --set buffer at the next free space to input
+                FIFO_buffer(free_Space) := Data_in;     --set buffer at the next free space to input
                 free_Space := free_Space +1;        --increment the pointers
                 newest_Sample := newest_Sample +1;
-            elsif(read_Req = '1' and empty_internal = '0')then  --check for a read request
+				end if;
+			--logic to read from the buffer
+            if(read_Req = '1' and empty_internal = '0')then  --check for a read request
                 Data_out <= FIFO_buffer(first_Sample);    --set the data out to equal the first sample
                 first_Sample := first_Sample +1;            --increment the pointers
             end if;
