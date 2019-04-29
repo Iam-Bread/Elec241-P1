@@ -46,14 +46,12 @@ begin
     process(clk,reset)    --sensitivity list
 
     variable first_Sample : natural range 0 to BUFFER_SIZE;     --points to the sample thats been in the buffer the longest (first sample)
-    variable newest_Sample : natural range 0 to BUFFER_SIZE;  --points to the newest sample (last sample)
     variable free_Space : natural range 0 to BUFFER_SIZE;     --points to the next space in the buffer
     variable numberOfValues: natural range 0 to BUFFER_SIZE-1;
 
     begin
        
         if(reset = '0')then     --reset values to defualts
-            Data_out <= (others => 0);
             empty_internal <= '0';
             full_internal <= '0';
             first_Sample := 0;
@@ -61,7 +59,7 @@ begin
         elsif(rising_edge(Clk))then     --on the rising edge of the clock
             --logic to write to the buffer
             if(write_Req = '1' and full_internal = '0')then --check for a write request
-                FIFO_buffer(free_Space) := Data_in;     --set buffer at the next free space to input
+                FIFO_buffer(free_Space) <= Data_in;     --set buffer at the next free space to input
                 free_Space := free_Space +1;        --increment the pointers
                 numberOfValues := numberOfValues +1;
             end if;
