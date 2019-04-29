@@ -2078,65 +2078,6 @@ agreement for further details.
 	(annotation_block (parameter)(rect 256 1440 448 1480))
 )
 (symbol
-	(rect 2744 1824 2968 1936)
-	(text "debounce" (rect 5 0 52 12)(font "Arial" ))
-	(text "inst22" (rect 8 96 36 113)(font "Intel Clear" ))
-	(port
-		(pt 0 32)
-		(input)
-		(text "OPTO_A_IN" (rect 0 0 60 12)(font "Arial" ))
-		(text "OPTO_A_IN" (rect 21 27 81 39)(font "Arial" ))
-		(line (pt 0 32)(pt 16 32))
-	)
-	(port
-		(pt 0 48)
-		(input)
-		(text "OPTO_B_IN" (rect 0 0 60 12)(font "Arial" ))
-		(text "OPTO_B_IN" (rect 21 43 81 55)(font "Arial" ))
-		(line (pt 0 48)(pt 16 48))
-	)
-	(port
-		(pt 0 64)
-		(input)
-		(text "clk" (rect 0 0 14 12)(font "Arial" ))
-		(text "clk" (rect 21 59 35 71)(font "Arial" ))
-		(line (pt 0 64)(pt 16 64))
-	)
-	(port
-		(pt 224 32)
-		(output)
-		(text "OPTO_A_OUT" (rect 0 0 70 12)(font "Arial" ))
-		(text "OPTO_A_OUT" (rect 144 27 214 39)(font "Arial" ))
-		(line (pt 224 32)(pt 208 32))
-	)
-	(port
-		(pt 224 48)
-		(output)
-		(text "OPTO_B_OUT" (rect 0 0 70 12)(font "Arial" ))
-		(text "OPTO_B_OUT" (rect 144 43 214 55)(font "Arial" ))
-		(line (pt 224 48)(pt 208 48))
-	)
-	(parameter
-		"clk_period"
-		"P\"20000000 fs\""
-		""
-		(type "PARAMETER_UNKNOWN")	)
-	(parameter
-		"debounce_time"
-		"P\"20000000000 fs\""
-		""
-		(type "PARAMETER_UNKNOWN")	)
-	(parameter
-		"on_state"
-		"'0'"
-		""
-		(type "PARAMETER_ENUM")	)
-	(drawing
-		(rectangle (rect 16 16 208 96))
-	)
-	(annotation_block (parameter)(rect 2968 1744 3232 1824))
-)
-(symbol
 	(rect 3528 2120 3800 2200)
 	(text "pad_bits" (rect 5 0 46 12)(font "Arial" ))
 	(text "inst23" (rect 8 64 36 81)(font "Intel Clear" ))
@@ -2318,61 +2259,52 @@ agreement for further details.
 	)
 )
 (symbol
-	(rect 3024 1856 3264 1968)
+	(rect 2824 1808 3056 1920)
 	(text "AngleTracker" (rect 5 0 68 12)(font "Arial" ))
 	(text "inst21" (rect 8 96 37 108)(font "Arial" ))
 	(port
 		(pt 0 32)
 		(input)
-		(text "OPTOA" (rect 0 0 37 12)(font "Arial" ))
-		(text "OPTOA" (rect 21 27 58 39)(font "Arial" ))
+		(text "clk" (rect 0 0 14 12)(font "Arial" ))
+		(text "clk" (rect 21 27 35 39)(font "Arial" ))
 		(line (pt 0 32)(pt 16 32))
 	)
 	(port
 		(pt 0 48)
 		(input)
-		(text "OPTOB" (rect 0 0 36 12)(font "Arial" ))
-		(text "OPTOB" (rect 21 43 57 55)(font "Arial" ))
+		(text "OPTOA" (rect 0 0 37 12)(font "Arial" ))
+		(text "OPTOA" (rect 21 43 58 55)(font "Arial" ))
 		(line (pt 0 48)(pt 16 48))
 	)
 	(port
 		(pt 0 64)
 		(input)
-		(text "direction" (rect 0 0 41 12)(font "Arial" ))
-		(text "direction" (rect 21 59 62 71)(font "Arial" ))
+		(text "OPTOB" (rect 0 0 36 12)(font "Arial" ))
+		(text "OPTOB" (rect 21 59 57 71)(font "Arial" ))
 		(line (pt 0 64)(pt 16 64))
 	)
 	(port
-		(pt 240 32)
-		(output)
-		(text "Angle_A[data_width-1..0]" (rect 0 0 121 12)(font "Arial" ))
-		(text "Angle_A[data_width-1..0]" (rect 117 27 219 39)(font "Arial" ))
-		(line (pt 240 32)(pt 224 32)(line_width 3))
+		(pt 0 80)
+		(input)
+		(text "reset" (rect 0 0 24 12)(font "Arial" ))
+		(text "reset" (rect 21 75 45 87)(font "Arial" ))
+		(line (pt 0 80)(pt 16 80))
 	)
 	(port
-		(pt 240 48)
+		(pt 232 32)
 		(output)
-		(text "Angle_B[data_width-1..0]" (rect 0 0 121 12)(font "Arial" ))
-		(text "Angle_B[data_width-1..0]" (rect 117 43 219 55)(font "Arial" ))
-		(line (pt 240 48)(pt 224 48)(line_width 3))
-	)
-	(port
-		(pt 240 64)
-		(output)
-		(text "A" (rect 0 0 8 12)(font "Arial" ))
-		(text "A" (rect 213 59 219 71)(font "Arial" ))
-		(line (pt 240 64)(pt 224 64))
-	)
-	(port
-		(pt 240 80)
-		(output)
-		(text "B" (rect 0 0 7 12)(font "Arial" ))
-		(text "B" (rect 214 75 219 87)(font "Arial" ))
-		(line (pt 240 80)(pt 224 80))
+		(text "ANGLE[data_width-1..0]" (rect 0 0 118 12)(font "Arial" ))
+		(text "ANGLE[data_width-1..0]" (rect 112 27 211 39)(font "Arial" ))
+		(line (pt 232 32)(pt 216 32)(line_width 3))
 	)
 	(parameter
 		"DATA_WIDTH"
 		"12"
+		""
+		(type "PARAMETER_SIGNED_DEC")	)
+	(parameter
+		"maxAngle"
+		"3017"
 		""
 		(type "PARAMETER_SIGNED_DEC")	)
 	(parameter
@@ -2381,14 +2313,14 @@ agreement for further details.
 		""
 		(type "PARAMETER_SIGNED_DEC")	)
 	(drawing
-		(rectangle (rect 16 16 224 96))
+		(rectangle (rect 16 16 216 96))
 	)
-	(annotation_block (parameter)(rect 3264 1792 3456 1856))
+	(annotation_block (parameter)(rect 3064 1744 3256 1808))
 )
 (symbol
-	(rect 3104 2056 3416 2200)
+	(rect 3104 2056 3416 2168)
 	(text "MotorController" (rect 5 0 79 12)(font "Arial" ))
-	(text "inst20" (rect 8 128 37 140)(font "Arial" ))
+	(text "inst20" (rect 8 96 37 108)(font "Arial" ))
 	(port
 		(pt 0 32)
 		(input)
@@ -2406,23 +2338,16 @@ agreement for further details.
 	(port
 		(pt 0 64)
 		(input)
-		(text "Angle_A[data_width-1..0]" (rect 0 0 121 12)(font "Arial" ))
-		(text "Angle_A[data_width-1..0]" (rect 21 59 142 71)(font "Arial" ))
+		(text "AngleIN[data_width-1..0]" (rect 0 0 120 12)(font "Arial" ))
+		(text "AngleIN[data_width-1..0]" (rect 21 59 141 71)(font "Arial" ))
 		(line (pt 0 64)(pt 16 64)(line_width 3))
 	)
 	(port
 		(pt 0 80)
 		(input)
-		(text "Angle_B[data_width-1..0]" (rect 0 0 121 12)(font "Arial" ))
-		(text "Angle_B[data_width-1..0]" (rect 21 75 142 87)(font "Arial" ))
-		(line (pt 0 80)(pt 16 80)(line_width 3))
-	)
-	(port
-		(pt 0 96)
-		(input)
 		(text "reset" (rect 0 0 24 12)(font "Arial" ))
-		(text "reset" (rect 21 91 45 103)(font "Arial" ))
-		(line (pt 0 96)(pt 16 96))
+		(text "reset" (rect 21 75 45 87)(font "Arial" ))
+		(line (pt 0 80)(pt 16 80))
 	)
 	(port
 		(pt 312 32)
@@ -2441,16 +2366,9 @@ agreement for further details.
 	(port
 		(pt 312 64)
 		(output)
-		(text "direction" (rect 0 0 41 12)(font "Arial" ))
-		(text "direction" (rect 257 59 291 71)(font "Arial" ))
-		(line (pt 312 64)(pt 296 64))
-	)
-	(port
-		(pt 312 80)
-		(output)
 		(text "ANGLE[data_width-1..0]" (rect 0 0 118 12)(font "Arial" ))
-		(text "ANGLE[data_width-1..0]" (rect 192 75 291 87)(font "Arial" ))
-		(line (pt 312 80)(pt 296 80)(line_width 3))
+		(text "ANGLE[data_width-1..0]" (rect 192 59 291 71)(font "Arial" ))
+		(line (pt 312 64)(pt 296 64)(line_width 3))
 	)
 	(parameter
 		"DATA_WIDTH"
@@ -2463,9 +2381,9 @@ agreement for further details.
 		""
 		(type "PARAMETER_SIGNED_DEC")	)
 	(drawing
-		(rectangle (rect 16 16 296 128))
+		(rectangle (rect 16 16 296 96))
 	)
-	(annotation_block (parameter)(rect 3416 1992 3608 2056))
+	(annotation_block (parameter)(rect 3184 1984 3376 2048))
 )
 (connector
 	(pt -256 224)
@@ -3522,49 +3440,12 @@ agreement for further details.
 	(pt 2712 1832)
 )
 (connector
-	(text "CLOCK_50" (rect 2594 1872 2647 1889)(font "Intel Clear" ))
-	(pt 2744 1888)
-	(pt 2584 1888)
-)
-(connector
-	(pt 2712 1856)
-	(pt 2744 1856)
-)
-(connector
 	(pt 2680 1856)
 	(pt 2696 1856)
 )
 (connector
 	(pt 2696 1856)
 	(pt 2696 1872)
-)
-(connector
-	(pt 2696 1872)
-	(pt 2744 1872)
-)
-(connector
-	(pt 2968 1872)
-	(pt 3000 1872)
-)
-(connector
-	(pt 3000 1872)
-	(pt 3000 1904)
-)
-(connector
-	(pt 3000 1904)
-	(pt 3024 1904)
-)
-(connector
-	(pt 2968 1856)
-	(pt 3008 1856)
-)
-(connector
-	(pt 3008 1856)
-	(pt 3008 1888)
-)
-(connector
-	(pt 3008 1888)
-	(pt 3024 1888)
 )
 (connector
 	(pt 3488 2152)
@@ -3625,171 +3506,60 @@ agreement for further details.
 	(pt 3104 2088)
 )
 (connector
-	(text "areset" (rect 2970 2136 2999 2153)(font "Intel Clear" ))
-	(pt 2960 2152)
-	(pt 3104 2152)
-)
-(connector
-	(pt 3264 1920)
-	(pt 3320 1920)
-)
-(connector
-	(pt 3320 1920)
-	(pt 3320 1912)
-)
-(connector
-	(pt 3320 1912)
-	(pt 3344 1912)
-)
-(connector
-	(pt 3344 1936)
-	(pt 3264 1936)
-)
-(connector
-	(text "ANGLE_A[11..0]" (rect 3322 1872 3397 1889)(font "Intel Clear" ))
-	(pt 3384 1888)
-	(pt 3312 1888)
-	(bus)
-)
-(connector
-	(pt 3264 1904)
-	(pt 3312 1904)
-	(bus)
-)
-(connector
-	(pt 3312 1904)
-	(pt 3312 1888)
-	(bus)
-)
-(connector
-	(pt 3264 1888)
-	(pt 3272 1888)
-	(bus)
-)
-(connector
-	(pt 3272 2048)
-	(pt 3272 1888)
-	(bus)
-)
-(connector
-	(pt 3072 2048)
-	(pt 3272 2048)
-	(bus)
-)
-(connector
-	(pt 3072 2048)
-	(pt 3072 2120)
-	(bus)
-)
-(connector
 	(pt 3072 2120)
 	(pt 3104 2120)
 	(bus)
 )
 (connector
+	(pt 2712 1856)
+	(pt 2824 1856)
+)
+(connector
+	(pt 2824 1872)
+	(pt 2696 1872)
+)
+(connector
+	(text "CLOCK_50" (rect 2658 1784 2711 1801)(font "Intel Clear" ))
+	(pt 2808 1800)
+	(pt 2648 1800)
+)
+(connector
+	(pt 2808 1800)
+	(pt 2808 1840)
+)
+(connector
+	(pt 2808 1840)
+	(pt 2824 1840)
+)
+(connector
+	(pt 3056 1840)
+	(pt 3072 1840)
+	(bus)
+)
+(connector
+	(pt 3072 1840)
+	(pt 3072 2120)
+	(bus)
+)
+(connector
+	(text "SPIS_RX[15..0]" (rect 2882 2088 2952 2105)(font "Intel Clear" ))
+	(pt 3104 2104)
+	(pt 2872 2104)
+	(bus)
+)
+(connector
+	(text "areset" (rect 2962 2120 2991 2137)(font "Intel Clear" ))
+	(pt 3104 2136)
+	(pt 2952 2136)
+)
+(connector
 	(pt 3488 2152)
-	(pt 3488 2136)
+	(pt 3488 2120)
 	(bus)
 )
 (connector
-	(pt 3416 2136)
-	(pt 3488 2136)
-	(bus)
-)
-(connector
-	(text "motorDirection" (rect 3416 2104 3485 2121)(font "Intel Clear" ))
 	(pt 3416 2120)
-	(pt 3456 2120)
-)
-(connector
-	(text "motorDirection" (rect 2976 1904 3045 1921)(font "Intel Clear" ))
-	(pt 3024 1920)
-	(pt 2976 1920)
-)
-(connector
-	(text "ANGLE_A[7..0]" (rect 2522 1480 2591 1497)(font "Intel Clear" ))
-	(pt 2616 1496)
-	(pt 2512 1496)
-	(bus)
-)
-(connector
-	(text "ANGLE_A[0]" (rect 2616 1664 2675 1681)(font "Intel Clear" ))
-	(pt 2648 1680)
-	(pt 2616 1680)
-)
-(connector
-	(text "ANGLE_A[1]" (rect 2616 1640 2675 1657)(font "Intel Clear" ))
-	(pt 2648 1656)
-	(pt 2616 1656)
-)
-(connector
-	(text "ANGLE_A[2]" (rect 2616 1616 2675 1633)(font "Intel Clear" ))
-	(pt 2648 1632)
-	(pt 2616 1632)
-)
-(connector
-	(text "ANGLE_A[3]" (rect 2616 1592 2675 1609)(font "Intel Clear" ))
-	(pt 2648 1608)
-	(pt 2616 1608)
-)
-(connector
-	(text "ANGLE_A[4]" (rect 2616 1568 2675 1585)(font "Intel Clear" ))
-	(pt 2648 1584)
-	(pt 2616 1584)
-)
-(connector
-	(text "ANGLE_A[6]" (rect 2616 1512 2675 1529)(font "Intel Clear" ))
-	(pt 2656 1528)
-	(pt 2616 1528)
-)
-(connector
-	(text "ANGLE_A[7]" (rect 2616 1488 2675 1505)(font "Intel Clear" ))
-	(pt 2656 1504)
-	(pt 2616 1504)
-)
-(connector
-	(text "ANGLE_A[5]" (rect 2640 1544 2699 1561)(font "Intel Clear" ))
-	(pt 2616 1560)
-	(pt 2664 1560)
-)
-(connector
-	(pt 2616 1656)
-	(pt 2616 1680)
-	(bus)
-)
-(connector
-	(pt 2616 1632)
-	(pt 2616 1656)
-	(bus)
-)
-(connector
-	(pt 2616 1608)
-	(pt 2616 1632)
-	(bus)
-)
-(connector
-	(pt 2616 1496)
-	(pt 2616 1504)
-	(bus)
-)
-(connector
-	(pt 2616 1504)
-	(pt 2616 1528)
-	(bus)
-)
-(connector
-	(pt 2616 1584)
-	(pt 2616 1608)
-	(bus)
-)
-(connector
-	(pt 2616 1528)
-	(pt 2616 1560)
-	(bus)
-)
-(connector
-	(pt 2616 1560)
-	(pt 2616 1584)
+	(pt 3488 2120)
 	(bus)
 )
 (junction (pt 136 776))
@@ -3810,13 +3580,6 @@ agreement for further details.
 (junction (pt 976 1448))
 (junction (pt 912 1448))
 (junction (pt 1200 1480))
-(junction (pt 2616 1656))
-(junction (pt 2616 1632))
-(junction (pt 2616 1608))
-(junction (pt 2616 1584))
-(junction (pt 2616 1528))
-(junction (pt 2616 1504))
-(junction (pt 2616 1560))
 (text "All these signals are synchronised with the MCU clock" (rect 592 88 852 105)(font "Intel Clear" (bold)))
 (text "ALL labelled signals below this line are synchronised with the FPGA clock" (rect 1280 312 1724 331)(font "Intel Clear" (font_size 8)(bold)))
 (text "1MHz Output For Signal Tap sample clock" (rect -144 -104 90 -90)(font "Arial" (font_size 8)))
@@ -3825,7 +3588,6 @@ agreement for further details.
 (text "Vice versa for setting space available. " (rect -408 928 -183 947)(font "Intel Clear" (font_size 8)))
 (text "LCD is able to be used when the LCD enable pin goes high. new data is sent when the busy rx signal goes low. " (rect 608 1384 1253 1403)(font "Intel Clear" (font_size 8)))
 (text "The relevance of these flip flops is to generate a pulse used for the LCD Enable,, must be a pulse so that data only sends once to the lcd. " (rect 608 1368 1412 1387)(font "Intel Clear" (font_size 8)))
-(text "SPIS_RX[15..0]" (rect 2850 2096 2920 2113)(font "Intel Clear" ))
 (line (pt 552 304)(pt 1824 304)(color 85 85 255)(dashed)(line_width 2))
 (rectangle (rect -464 72 504 1120)(color 0 0 255)(line_width 2))
 (rectangle (rect 552 72 1824 616)(color 85 255 0)(line_width 2))

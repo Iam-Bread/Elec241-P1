@@ -11,16 +11,16 @@ entity MotorController is
 	(
         -- Constants
 		DATA_WIDTH	: integer  := 12;
-		MAX_ANGLE	: integer  := 3017
+		MAX_ANGLE	: natural  := 3017
 	);
 	port
 	(
 		-- Inputs
 		STATE : in std_logic := '0'; --1 is on, 0 is off
-        SETANGLE : in  std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
+       SETANGLE : in  std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
         
-        Angle_A : in std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
-        Angle_B : in std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
+       AngleIN : in natural range 0 to MAX_ANGLE;
+    
 
         reset : in  std_logic;
 
@@ -29,39 +29,32 @@ entity MotorController is
 		MOTORA : out std_logic;
 		MOTORB : out std_logic;
 		
-		direction : out std_logic;
-		
 		ANGLE : out std_logic_vector(DATA_WIDTH-1 DOWNTO 0)
 	);
 end MotorController;
 
 architecture logic of MotorController is
-
 begin
-	process(STATE,reset,Angle_A)    --sensitivity list
+	ANGLE <= std_logic_vector(to_unsigned(AngleIN,DATA_WIDTH));
+	process(STATE,reset,Angle)    --sensitivity list
 	begin
-	
 		if(reset = '0')then		--asynchronous reset to default values
-			--count <= (others=>'0') ;
 			MOTORA <= '1';
 			MOTORB <= '1';
-			
-		elsif(STATE = '1')then
-		
-			if(to_integer(unsigned(SETANGLE)) < MAX_ANGLE)then		--check if angle is valid
-				if(unsigned(SETANGLE) > unsigned(Angle_A))then	--check what direction to go 
-					MOTORA <= '1';			--go Clockwise
-					MOTORB <= '0';
-					direction <= '1';
-				elsif(unsigned(SETANGLE) < unsigned(Angle_A))then
-					MOTORA <= '0';			--go anticlockwise
-					MOTORB <= '1';
-					direction <= '0';
-            end if;
-          end if; 
+		elsif(STATE = '1'and unsigned(SETANGLE) < MAX_ANGLE)then
+			if(unsigned(SETANGLE) = AngleIN)then
+				MOTORA <= '1';		
+				MOTORB <= '1';
+			elsif(unsigned(SETANGLE) > AngleIN)then	--check what direction to go 
+				MOTORA <= '1';			--go Clockwise
+				MOTORB <= '0';
+			elsif(unsigned(SETANGLE) < AngleIN)then
+				MOTORA <= '0';			--go anticlockwise
+				MOTORB <= '1';
+			end if;
 		else
 			MOTORA <= '1';
-			MOTORB <= '1'; 
-     end if;
+			MOTORB <= '1';			
+		end if;
 	end process;
 end logic;
