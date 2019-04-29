@@ -18,15 +18,21 @@ entity AngleTracker is
 		--optical encoder inputs
 		OPTOA : in std_logic;	
 		OPTOB : in std_logic;
+		
+		direction : in std_logic; --0 is clockwise 1 is anticlockwise
 
-        Angle_A : out std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
-       Angle_B : out std_logic_vector(DATA_WIDTH-1 DOWNTO 0)
+      Angle_A : out std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
+      Angle_B : out std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
+		
+		A : OUT STD_LOGIC;
+		B : OUT STD_LOGIC
+
 	);
 end AngleTracker;
 
 architecture logic of AngleTracker is
-    type state_type is (clockwise,anticlockwise);
-    signal state: state_type := clockwise; 	--default state is clockwise
+   -- type state_type is (clockwise,anticlockwise);
+   -- signal state: state_type := clockwise; 	--default state is clockwise
     
     signal countA : std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
     signal countB : std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
@@ -36,36 +42,57 @@ begin
     Angle_B <= countB;
 
     --determine the direction the motor is going
-    direction : process(OPTOA,OPTOB)
+	process(OPTOA,OPTOB,direction)
     begin
-        if(rising_edge(OPTOA))then --if rising edge of A, and B is allready high then B must lead A
-            if(OPTOB = '1')then
-                state <= clockwise;
-            else
-                state <= anticlockwise; --A is leading B
-            end if;
-        end if;
-    end process direction;
+--        if(falling_edge(OPTOA))then 
+--            if(OPTOB = '1')then
+--					state <= clockwise;
+--				end if;
+--				if(OPTOB = '0')then
+--					state <= anticlockwise;	
+--				end if;
+--			end if;	
+--			
+				 if(direction = '1')then
+                --if(to_integer(unsigned(countA)) = MAX_ANGLE)then
+                --    countA <= (others => '0'); 
+               -- else
+                    countA <= std_logic_vector(unsigned(countA) + 1);   --increment A
+               -- end if;
+						A <= '1';
+						B <='0';
+			
+            elsif(direction = '0')then
+              --  if(to_integer(unsigned(countA)) = 0)then
+               --     countA <= std_logic_vector(to_unsigned(MAX_ANGLE, DATA_WIDTH));
+               -- else
+                    countA <= std_logic_vector(unsigned(countA) - 1);   --decrement A
+               -- end if;
+					A <= '0';
+					B <='1';
+            end if;   
+      
+    end process;
 
     --counter for optical encoder A
-	Acount : process(OPTOA)    --sensitivity list
-    begin
-        if(rising_edge(OPTOA))then
-            if(state = clockwise)then
-                if(to_integer(unsigned(countA)) = MAX_ANGLE)then
-                    countA <= (others => '0'); 
-                else
-                    countA <= std_logic_vector(unsigned(countA) + 1);   --increment A
-                end if;
-            else
-                if(to_integer(unsigned(countA)) = 0)then
-                    countA <= std_logic_vector(to_unsigned(MAX_ANGLE, DATA_WIDTH));
-                else
-                    countA <= std_logic_vector(unsigned(countA) - 1);   --decrement A
-                end if;
-            end if;   
-        end if;
-    end process Acount;
+--	Acount : process(OPTOA)    --sensitivity list
+--    begin
+--        if(rising_edge(OPTOA))then
+--            if(state = clockwise)then
+--                if(to_integer(unsigned(countA)) = MAX_ANGLE)then
+--                    countA <= (others => '0'); 
+--                else
+--                    countA <= std_logic_vector(unsigned(countA) + 1);   --increment A
+--                end if;
+--            else
+--                if(to_integer(unsigned(countA)) = 0)then
+--                    countA <= std_logic_vector(to_unsigned(MAX_ANGLE, DATA_WIDTH));
+--                else
+--                    countA <= std_logic_vector(unsigned(countA) - 1);   --decrement A
+--                end if;
+--            end if;   
+--        end if;
+--    end process Acount;
     --counter for optical encoder B
    -- Bcount : process(OPTOB)    --sensitivity list
     --begin
