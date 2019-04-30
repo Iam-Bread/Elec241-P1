@@ -17,38 +17,37 @@ entity MotorController is
 	(
 		-- Inputs
 		STATE : in std_logic := '0'; --1 is on, 0 is off
-       SETANGLE : in  std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
+      SETANGLE : in  std_logic_vector(DATA_WIDTH-1 DOWNTO 0);
         
-       AngleIN : in natural range 0 to MAX_ANGLE;
-    
+      AngleIN : in std_logic_vector(DATA_WIDTH-1 downto 0);
 
-        reset : in  std_logic;
+      reset : in  std_logic;
 
 		-- Outputs
 		--outputs connected to hbridge to control motor
 		MOTORA : out std_logic;
 		MOTORB : out std_logic;
-		
+		--current angle
 		ANGLE : out std_logic_vector(DATA_WIDTH-1 DOWNTO 0)
 	);
 end MotorController;
 
 architecture logic of MotorController is
 begin
-	ANGLE <= std_logic_vector(to_unsigned(AngleIN,DATA_WIDTH));
+	ANGLE <= AngleIN;--maps the input angle to the output angle but as a 12bit binary number
 	process(STATE,reset,Angle)    --sensitivity list
 	begin
 		if(reset = '0')then		--asynchronous reset to default values
 			MOTORA <= '1';
 			MOTORB <= '1';
-		elsif(STATE = '1'and unsigned(SETANGLE) < MAX_ANGLE)then
-			if(unsigned(SETANGLE) = AngleIN)then
+		elsif(STATE = '1'and unsigned(SETANGLE) < MAX_ANGLE)then --check if it is a valid angle
+			if(unsigned(SETANGLE) = unsigned(AngleIN))then
 				MOTORA <= '1';		
 				MOTORB <= '1';
-			elsif(unsigned(SETANGLE) > AngleIN)then	--check what direction to go 
+			elsif(unsigned(SETANGLE) > unsigned(AngleIN))then	--check what direction to go 
 				MOTORA <= '1';			--go Clockwise
 				MOTORB <= '0';
-			elsif(unsigned(SETANGLE) < AngleIN)then
+			elsif(unsigned(SETANGLE) < unsigned(AngleIN))then
 				MOTORA <= '0';			--go anticlockwise
 				MOTORB <= '1';
 			end if;

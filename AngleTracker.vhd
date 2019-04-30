@@ -1,11 +1,3 @@
--- Quartus Prime VHDL Template
--- Four-State Mealy State Machine
-
--- A Mealy machine has outputs that depend on both the state and
--- the inputs.	When the inputs change, the outputs are updated
--- immediately, without waiting for a clock edge.  The outputs
--- can be written more than once per state or per clock cycle.
-
 library ieee;
 use ieee.std_logic_1164.all;
 USE ieee.numeric_std.all;
@@ -15,8 +7,8 @@ entity AngleTracker is
 		generic
 	(
         -- Constants
-		DATA_WIDTH	: integer  := 12;
-		maxAngle : natural := 3017
+		DATA_WIDTH	: natural  := 12;
+		MAX_ANGLE : natural := 3017
 	);
 	port
 	(
@@ -27,7 +19,8 @@ entity AngleTracker is
 		A	 : in	std_logic;
 		B	 : in	std_logic;
 
-		ANGLE	 : out natural range 0 to maxAngle
+		--ANGLE	 : out natural range 0 to MAX_ANGLE
+		ANGLE : out std_logic_vector(DATA_WIDTH-1 downto 0)
 
 		
 	);
@@ -41,27 +34,27 @@ architecture logic of AngleTracker is
 
 	-- Register to hold the current state
 	signal state : state_type := s0;
-	signal current_angle : natural range 0 to maxAngle;
+	signal current_angle : std_logic_vector(DATA_WIDTH-1 downto 0);
 	signal currentDirection : std_logic;
 
 
 begin
-
+	--map output to current angle value
 	ANGLE <= current_angle;
 	
 	process (clk, OPTOA, OPTOB)
 	begin
-
+--when rising edge of 50 mhz clk
 		if (rising_edge(clk)) then
-			case state is
+			case state is	--check  current state
 				when s0=>
-					if(A = '1' and B = '0')then
-						state <= a1;
+					if(A = '1' and B = '0')then	--checks motor direction
+						state <= a1;				
 					elsif(A = '0' and B ='1')then
 						state <= b1;
 					end if;	
 		
-		
+		--waits for rising edge of A,then B then falling edge of A then B
 				when a1=>
 					if(OPTOA='1')then
 						state<=a2;
@@ -82,13 +75,13 @@ begin
 					end if;
 				when a4=>
 					if(OPTOB='0')then
-						current_Angle <= current_Angle +1;
+						current_Angle <= std_logic_vector(unsigned(current_Angle) +1);	--increments current angle as it has rescied 1 full pulse of both opto A and B
 						state<=s0;
 					else
 						state<=a4;
 					end if;
 				
-				
+			--waits for rising edge of B,then A then falling edge of B then A
 				when b1=>
 					if(OPTOB='1')then
 						state<=b2;
@@ -109,7 +102,7 @@ begin
 					end if;
 				when b4=>
 					if(OPTOA='0')then
-						current_Angle <= current_Angle +1;
+						current_Angle <= std_logic_vector(unsigned(current_Angle) -1); --decrements current angle as it has rescied 1 full pulse of both opto A and B
 						state<=s0;
 					else
 						state<=b4;
