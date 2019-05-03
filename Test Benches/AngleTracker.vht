@@ -92,15 +92,20 @@ variable t : time := 0 ns;
 end process;
 
 init : PROCESS                                               
--- variable declarations                                     
-BEGIN    
+-- variable declarations   
+current_angle : std_logic_vector(DATA_WIDTH-1 downto 0);                                  
+BEGIN   
+
+ 
 	loop
-	       waitForClockToRise; 
-		A <= '1';                                        
+	       waitForClockToRise;                                       
         	OPTOA <= '1';
 		wait for 2 ns;
 		OPTOB <= '1';
-
+		waitForClockToFall;
+		OPTOA <= '0';
+		wait for 2 ns;
+		OPTOB <= '0';   
 	end loop;
 
 WAIT;                                                       
