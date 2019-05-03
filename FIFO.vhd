@@ -72,7 +72,7 @@ begin
             end if;
 
              --calculate to space avaliable left in the buffer
-            space_Avaliable <= std_logic_vector(to_unsigned((BUFFER_SIZE-(abs(numberOfValues))),9));
+            space_Avaliable <= std_logic_vector(to_unsigned((BUFFER_SIZE-1)-numberOfValues,9));
 
 
 				--work out if the buffer is full or empty
